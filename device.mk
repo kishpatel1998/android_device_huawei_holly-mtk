@@ -213,6 +213,10 @@ PRODUCT_DEVICE := holly
 TARGET_SCREEN_HEIGHT := 1280
 TARGET_SCREEN_WIDTH := 720
 
+# AAPT
+PRODUCT_AAPT_CONFIG := normal
+PRODUCT_AAPT_PREF_CONFIG := xhdpi
+
 PRODUCT_PACKAGES += \
     librs_jni \
     com.android.future.usb.accessory
