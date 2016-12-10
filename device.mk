@@ -21,12 +21,8 @@ $(call inherit-product, device/common/gps/gps_us_supl.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
-# Enable dex-preoptimization, but we have both limited space in the system and data partitions.
-# PRODUCT_DEX_PREOPT_DEFAULT_FLAGS := --compiler-filter=interpret-only
-# $(call add-product-dex-preopt-module-config,services,--compiler-filter=space)
 
 LOCAL_PATH := device/huawei/holly
-
 PRODUCT_CHARACTERISTICS := default
 
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
@@ -39,11 +35,14 @@ endif
 
 PRODUCT_TAGS += dalvik.gc.type-precise
 
+TARGET_PROVIDES_INIT_RC := true
+
 PRODUCT_PACKAGES += \
     Torch
 
 PRODUCT_PACKAGES += \
-    libxlog
+    libxlog \
+    libmtk_symbols
 
 # Lights
 PRODUCT_PACKAGES += \
@@ -85,6 +84,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Rootdir
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/enableswap.sh:root/enableswap.sh \
+    $(LOCAL_PATH)/rootdir/init.rc:root/init.rc \ 
+ $(LOCAL_PATH)/rootdir/init.project.rc:root/init.project.rc \
+    $(LOCAL_PATH)/rootdir/init.aee.rc:root/init.aee.rc \
+    $(LOCAL_PATH)/rootdir/init.target.rc:root/init.target.rc \
     $(LOCAL_PATH)/rootdir/factory_init.rc:root/factory_init.rc \
     $(LOCAL_PATH)/rootdir/fstab.mt6582:root/fstab.mt6582 \
     $(LOCAL_PATH)/rootdir/init.modem.rc:root/init.modem.rc \
@@ -167,10 +170,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libgralloc_extra
 
-# GPS
-PRODUCT_PACKAGES += \
-    YGPS
-
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml \
     $(LOCAL_PATH)/configs/platform.xml:system/etc/permissions/platform.xml \
@@ -198,7 +197,8 @@ PRODUCT_PROPERTY_OVERRIDES := \
     persist.sys.usb.config=mtp,adb, mass_storage \
     persist.service.adb.enable=1 \
     persist.service.debuggable=1 \
-    persist.mtk.wcn.combo.chipid=-1
+    persist.mtk.wcn.combo.chipid=-1 \
+    persist.debug.xlog.enable=1
 
 $(call inherit-product, build/target/product/full.mk)
 
